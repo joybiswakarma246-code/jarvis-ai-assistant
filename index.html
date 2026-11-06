@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS AI</title>
+<style>
+body {
+  margin: 0;
+  background: #050b18;
+  color: #00d9ff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 35px 15px;
+}
+h1 {
+  margin-top: 40px;
+  font-size: 38px;
+  letter-spacing: 5px;
+}
+.circle {
+  width: 190px;
+  height: 190px;
+  border: 3px solid #00d9ff;
+  border-radius: 50%;
+  margin: 50px auto 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 65px;
+  box-shadow: 0 0 30px #00d9ff;
+}
+button {
+  background: #00d9ff;
+  color: #00101c;
+  border: none;
+  padding: 15px 28px;
+  border-radius: 30px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#status, #answer {
+  margin: 25px auto;
+  max-width: 500px;
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<h1>J.A.R.V.I.S</h1>
+<p>PERSONAL AI ASSISTANT</p>
+
+<div class="circle">◉</div>
+
+<button onclick="startJarvis()">🎙 TALK TO JARVIS</button>
+
+<p id="status">System online. Press the button to speak.</p>
+<p id="answer">Waiting for your command...</p>
+
+<script>
+function speak(text) {
+  document.getElementById("answer").innerText = text;
+  const speech = new SpeechSynthesisUtterance(text);
+  speechSynthesis.speak(speech);
+}
+
+function startJarvis() {
+  const Recognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!Recognition) {
+    speak("Voice recognition is not supported in this browser.");
+    return;
+  }
+
+  const recognition = new Recognition();
+  recognition.lang = "en-IN";
+  recognition.continuous = false;
+
+  document.getElementById("status").innerText =
+    "Listening...";
+
+  recognition.onresult = function(event) {
+    const command =
+      event.results[0][0].transcript.toLowerCase();
+
+    document.getElementById("status").innerText =
+      "You said: " + command;
+
+    if (command.includes("hello")) {
+      speak("Hello! I am Jarvis. How can I help you?");
+    }
+    else if (command.includes("time")) {
+      speak("The time is " +
+        new Date().toLocaleTimeString());
+    }
+    else if (command.includes("date")) {
+      speak("Today's date is " +
+        new Date().toDateString());
+    }
+    else if (command.includes("your name")) {
+      speak("My name is Jarvis, your personal assistant.");
+    }
+    else if (command.includes("how are you")) {
+      speak("I am functioning perfectly. Thank you!");
+    }
+    else {
+      speak("I heard you say " + command +
+        ". I am still learning.");
+    }
+  };
+
+  recognition.onerror = function() {
+    document.getElementById("status").innerText =
+      "Voice error. Please try again.";
+  };
+
+  recognition.start();
+}
+</script>
+
+</body>
+</html>
